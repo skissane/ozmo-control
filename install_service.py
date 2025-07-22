@@ -3,12 +3,13 @@ import os
 import subprocess
 from pathlib import Path
 
+HOME_DIR = Path.home()
 SERVICE_NAME = "kid_manager.service"
-SERVICE_DIR = Path.home() / ".config/systemd/user"
+SERVICE_DIR = HOME_DIR / ".config/systemd/user"
 SERVICE_FILE = SERVICE_DIR / SERVICE_NAME
 
 PYTHON_PATH = subprocess.run(["which", "python3"], capture_output=True, text=True).stdout.strip()
-SCRIPT_PATH = "/home/taba/ozmo-control/kid_manager.py"
+SCRIPT_PATH = f"{HOME_DIR}/ozmo-control/kid_manager.py"
 
 SERVICE_CONTENT = f"""\
 [Unit]
@@ -18,7 +19,7 @@ After=network.target
 [Service]
 Type=simple
 ExecStart={PYTHON_PATH} {SCRIPT_PATH}
-WorkingDirectory=/home/taba/ozmo-control
+WorkingDirectory={HOME_DIR}/ozmo-control
 Restart=on-failure
 Environment=PYTHONUNBUFFERED=1
 

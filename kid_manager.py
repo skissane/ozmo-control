@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import subprocess
-import time
-from datetime import datetime
+from time import sleep
+from datetime import datetime, time
 
 def run_script(script_name):
     """Run a shell script and return its output as a string."""
@@ -23,11 +23,18 @@ def get_expected_status():
     """Determine whether the account should be LOCKED or UNLOCKED based on time."""
     now = datetime.now()
     weekday = now.weekday()  # 0 = Monday, 6 = Sunday
-    hour = now.hour
-    if 0 <= weekday <= 4 and hour < 12:
+    current_time = now.time()
+
+    # Weekday (Mon–Fri) before noon → LOCKED
+    if 0 <= weekday <= 4 and current_time < time(12, 0):
         return "LOCKED"
-    else:
-        return "UNLOCKED"
+
+    # School night (Sun–Thu) after 21:15 → LOCKED
+    if 0 <= weekday <= 4 or weekday == 6:  # Sunday is 6
+        if current_time >= time(21, 15):
+            return "LOCKED"
+
+    return "UNLOCKED"
 
 def main():
     while True:
@@ -56,7 +63,7 @@ def main():
         except Exception as e:
             print(f"ERROR: {e}")
 
-        time.sleep(60)
+        sleep(60)
 
 if __name__ == "__main__":
     main()

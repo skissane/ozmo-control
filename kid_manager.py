@@ -34,6 +34,11 @@ def get_expected_status():
         if current_time >= time(21, 15):
             return "LOCKED"
 
+    # Weekend night (Fri–Sat) after 22:15 → LOCKED
+    if weekday in (4,5): # Friday is 4, Saturday is 5
+        if current_time >= time(22, 15):
+            return "LOCKED"
+
     return "UNLOCKED"
 
 def main():

@@ -25,8 +25,8 @@ def get_expected_status():
     weekday = now.weekday()  # 0 = Monday, 6 = Sunday
     current_time = now.time()
 
-    # Weekday (Mon–Fri) before 13:00 → LOCKED
-    if 0 <= weekday <= 4 and current_time < time(13, 0):
+    # Weekday (Mon–Fri) before 14:30 → LOCKED
+    if 0 <= weekday <= 4 and current_time < time(14, 30):
         return "LOCKED"
 
     # School night (Sun–Thu) after 21:15 → LOCKED

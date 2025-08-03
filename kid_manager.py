@@ -19,6 +19,12 @@ def run_script_action(script_name):
     except subprocess.CalledProcessError as e:
         print(f"ERROR: Failed to run {script_name}: {e}")
 
+SICK_DATES: tuple[str] = ("2025-08-04",)
+
+def is_sick(date: datetime) -> bool:
+    """Is child sick today?"""
+    return date.strftime("%Y-%m-%d") in SICK_DATES
+
 def get_expected_status():
     """Determine whether the account should be LOCKED or UNLOCKED based on time."""
     now = datetime.now()
@@ -26,7 +32,7 @@ def get_expected_status():
     current_time = now.time()
 
     # Weekday (Mon–Fri) before 14:30 → LOCKED
-    if 0 <= weekday <= 4 and current_time < time(14, 30):
+    if 0 <= weekday <= 4 and current_time < time(14, 30) and not is_sick(now):
         return "LOCKED"
 
     # School night (Sun–Thu) after 21:15 → LOCKED
